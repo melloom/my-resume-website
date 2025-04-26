@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/fix-case-sensitivity.js",
+    "prebuild": "node scripts/fix-case-sensitivity.cjs",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",

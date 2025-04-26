@@ -1,8 +1,13 @@
 // This script ensures folder names match the casing used in imports
 // Run this before deploying to Netlify
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Get current file directory with ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Paths that need to be consistent
 const pathMappings = [
