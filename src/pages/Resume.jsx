@@ -1,15 +1,12 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet';
+import BackToTop from '../components/common/BackToTop';
 import ResumeHeader from '../components/Resume/header/ResumeHeader';
 import ProfessionalSummary from '../components/Resume/ProfessionalSummary/ProfessionalSummary';
-import ResumeExperience from '../components/Resume/ResumeExperience/ResumeExperience';
-import ResumeEducation from '../components/resume/ResumeEducation/ResumeEducation';
-import ResumeCertifications from '../components/resume/ResumeCertifications/ResumeCertifications';
 import ResumeSkills from '../components/Resume/ResumeSkills/ResumeSkills';
-import SideNav from '../components/navigation/SideNav';
-import BackToTop from '../components/common/BackToTop';
-import { FaFileDownload } from 'react-icons/fa';
+import ResumeExperience from '../components/Resume/ResumeExperience/ResumeExperience';
+import ResumeEducation from '../components/Resume/ResumeEducation/ResumeEducation';
+import ResumeCertifications from '../components/Resume/ResumeCertifications/ResumeCertifications';
 import styles from './Resume.module.css';
 
 const Resume = () => {
