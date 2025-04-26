@@ -1,0 +1,439 @@
+.certificationsSection {
+  margin-bottom: 3.5rem;
+  background: var(--card-bg, rgba(30, 41, 59, 0.85));
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  color: var(--text-color, #ffffff);
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--primary-color, #6366f1);
+  border-radius: 3px;
+}
+
+.titleIcon {
+  color: var(--primary-color, #6366f1);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.certificationCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 25px;
+  margin-bottom: 2.5rem;
+}
+
+.certCard {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 3px solid var(--primary-color, #6366f1);
+}
+
+.certCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.cardHeader {
+  padding: 1.5rem;
+  background: var(--primary-color, #6366f1);
+  color: white;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+}
+
+.cardIcon {
+  font-size: 2.5rem;
+  color: white;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
+}
+
+.cardIcon svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.statusBadge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.cardContent {
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.certTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-color, #ffffff);
+  margin-bottom: 0.8rem;
+}
+
+.certMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+.metaIcon {
+  color: var(--primary-color, #6366f1);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.certDescription {
+  margin-bottom: 1.2rem;
+}
+
+.certDescription p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+.skillsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.skillTag {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary-color, #6366f1);
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.skillTag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Professional Development Section */
+.profDevSection {
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profDevTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color, #ffffff);
+  margin-bottom: 1rem;
+}
+
+.profDevIntro {
+  font-size: 1.05rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.learningPathsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.learningPath {
+  display: flex;
+  gap: 15px;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 12px;
+  padding: 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.learningPath:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  background: rgba(30, 41, 59, 0.7);
+}
+
+.pathIcon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.pathContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.pathTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color, #ffffff);
+  margin-bottom: 0.5rem;
+}
+
+.pathDesc {
+  font-size: 0.9rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  line-height: 1.5;
+}
+
+/* Light theme overrides */
+[data-theme="light"] .certificationsSection {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .sectionTitle, 
+[data-theme="light"] .profDevTitle,
+[data-theme="light"] .certTitle,
+[data-theme="light"] .pathTitle {
+  color: #1e293b;
+}
+
+[data-theme="light"] .certCard {
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .learningPath {
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .learningPath:hover {
+  background: rgba(248, 250, 252, 1);
+}
+
+[data-theme="light"] .certDescription p,
+[data-theme="light"] .profDevIntro,
+[data-theme="light"] .metaItem,
+[data-theme="light"] .pathDesc {
+  color: #64748b;
+}
+
+[data-theme="light"] .metaIcon {
+  color: #4f46e5;
+}
+
+[data-theme="light"] .profDevSection {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Planned Certifications Section */
+.plannedCertsSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.plannedCertsTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-color, #ffffff);
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.plannedCertsTitle::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 2px;
+  background: var(--primary-color, #6366f1);
+  border-radius: 2px;
+}
+
+.plannedCertsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.plannedCertCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.plannedCertCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  background: rgba(30, 41, 59, 0.5);
+}
+
+.plannedCertIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.plannedCertContent {
+  flex: 1;
+}
+
+.plannedCertTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.plannedCertInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+.plannedCertIssuer {
+  font-weight: 500;
+}
+
+.plannedCertDate {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+}
+
+/* Light theme overrides for planned certifications */
+[data-theme="light"] .plannedCertsSection {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .plannedCertsTitle {
+  color: #1e293b;
+}
+
+[data-theme="light"] .plannedCertCard {
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .plannedCertCard:hover {
+  background: rgba(248, 250, 252, 1);
+}
+
+[data-theme="light"] .plannedCertInfo {
+  color: #64748b;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .certificationCards {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .certificationsSection {
+    padding: 2rem;
+  }
+  
+  .certificationCards {
+    grid-template-columns: 1fr;
+  }
+  
+  .sectionTitle {
+    font-size: 1.6rem;
+  }
+  
+  .learningPathsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .certificationsSection {
+    padding: 1.5rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.4rem;
+  }
+  
+  .cardHeader {
+    padding: 1.2rem;
+    height: 70px;
+  }
+  
+  .cardContent {
+    padding: 1.2rem;
+  }
+  
+  .cardIcon {
+    font-size: 2rem;
+  }
+}
