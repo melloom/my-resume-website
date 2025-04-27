@@ -7,7 +7,6 @@ import PageLoader from './components/common/PageLoader';
 import InstallPWA from './components/common/InstallPWA';
 import { ThemeProvider } from './context/ThemeContext';
 import BackToTop from './components/common/BackToTop';
-import CacheBuster from './components/common/CacheBuster';
 
 // Lazy load pages for better performance
 const Home = lazy(() => import('./pages/Home'));
@@ -58,7 +57,6 @@ function App() {
           </Suspense>
           <Footer />
           <BackToTop />
-          {process.env.NODE_ENV === 'production' && <CacheBuster />}
           <InstallPWA />
         </ThemeProvider>
       </div>
