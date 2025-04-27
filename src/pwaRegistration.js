@@ -1,5 +1,6 @@
 // PWA Registration with enhanced handling for theme issues
 let registration = null;
+let deferredPrompt = null;
 
 export const registerServiceWorker = () => {
   if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
@@ -57,6 +58,18 @@ export const registerServiceWorker = () => {
       });
     });
   }
+
+  // Listen for the beforeinstallprompt event to capture the installation prompt
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later
+    deferredPrompt = e;
+    // Update UI to notify the user they can add to home screen
+    console.log('App can be installed');
+    // Optionally dispatch an event to notify components
+    window.dispatchEvent(new CustomEvent('pwaInstallable'));
+  });
 };
 
 // Force update of service worker
@@ -102,4 +115,40 @@ export const protectThemeSetting = () => {
   if (currentTheme && currentTheme !== appliedTheme) {
     document.documentElement.setAttribute('data-theme', currentTheme);
   }
+};
+
+// Add the missing installApp function for PWA installation
+export const installApp = async () => {
+  if (!deferredPrompt) {
+    console.log('No installation prompt available');
+    return false;
+  }
+  
+  try {
+    // Show the installation prompt
+    deferredPrompt.prompt();
+    
+    // Wait for the user to respond to the prompt
+    const choiceResult = await deferredPrompt.userChoice;
+    
+    // Clear the saved prompt since it can't be used again
+    deferredPrompt = null;
+    
+    // Check if the user accepted
+    if (choiceResult.outcome === 'accepted') {
+      console.log('User accepted the PWA installation');
+      return true;
+    } else {
+      console.log('User dismissed the PWA installation');
+      return false;
+    }
+  } catch (error) {
+    console.error('Error during PWA installation:', error);
+    return false;
+  }
+};
+
+// Check if PWA is installable
+export const isPwaInstallable = () => {
+  return !!deferredPrompt;
 };
