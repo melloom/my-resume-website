@@ -1,38 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styles from './LoadingScreen.module.css';
+// Import any necessary icons...
 
-const LoadingScreen = ({ message = "Loading..." }) => {
-  const [customMessage, setCustomMessage] = useState(message);
-  const [showAlmostThere, setShowAlmostThere] = useState(false);
+const LoadingScreen = ({ isLoading, progress, message = 'Loading...' }) => {
+  if (!isLoading) return null;
 
-  useEffect(() => {
-    // Check if it's an internal navigation from footer
-    const isFooterNav = sessionStorage.getItem('footerNavigation') === 'true';
-    const isInternalNav = sessionStorage.getItem('internalNavigation') === 'true';
-    
-    // For internal navigation show "Almost there..." after a delay
-    if (isInternalNav || isFooterNav) {
-      const timer = setTimeout(() => {
-        setShowAlmostThere(true);
-        setCustomMessage("Almost there...");
-      }, 800);
-      
-      return () => {
-        clearTimeout(timer);
-        // Clean up the session storage flag when component unmounts
-        sessionStorage.removeItem('footerNavigation');
-        sessionStorage.removeItem('internalNavigation');
-      };
-    }
-  }, []);
-
+  // Ensure progress is a valid number
+  const progressValue = typeof progress === 'number' && !isNaN(progress) ? progress : 0;
+  
   return (
     <div className={styles.loadingScreen}>
       <div className={styles.loadingContent}>
         <div className={styles.spinner}></div>
-        <div className={styles.loadingText}>
-          <p>{customMessage}</p>
+        <div className={styles.progressBar}>
+          <div 
+            className={styles.progressFill}
+            style={{ width: `${progressValue}%` }}
+          ></div>
         </div>
+        <p className={styles.loadingMessage}>{message}</p>
       </div>
     </div>
   );

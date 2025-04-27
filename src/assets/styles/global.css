@@ -496,3 +496,36 @@
   z-index: 1;
   padding: 1px 0; /* Add minimal padding to prevent margin collapse */
 }
+
+/* Page Transition Effects */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Target the main content area to prevent page jumping during transitions */
+main {
+  min-height: 70vh; /* Ensure consistent min height */
+}
+
+/* Add will-change to optimize rendering performance */
+.App > main {
+  will-change: transform, opacity;
+}

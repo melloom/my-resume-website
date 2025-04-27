@@ -1,61 +1,69 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Resume from './pages/Resume';
-import About from './pages/About';
-import Contact from './pages/Contact';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
+import { registerServiceWorker } from './pwaRegistration';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
-import LoadingScreen from './components/common/LoadingScreen';
-import ScrollToTop from './components/common/ScrollToTop';
+import PageLoader from './components/common/PageLoader';
+import InstallPWA from './components/common/InstallPWA';
+import { preloadAllRouteComponents } from './utils/routePreloader';
+
+// Lazy loaded pages for code splitting
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Resume = lazy(() => import('./pages/Resume'));
+const Contact = lazy(() => import('./pages/Contact'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
-  const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState('dark');
-  
+  const location = useLocation();
+
+  // Initialize theme from localStorage
   useEffect(() => {
-    // Check for saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    }
-    
-    // Simulate loading time
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-    
-    return () => clearTimeout(timer);
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
 
-  // Theme toggle function
+  // Handle theme toggle
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
   };
 
-  // Wait until theme is initialized before rendering
-  if (loading) {
-    return <LoadingScreen />;
-  }
+  // Register service worker for PWA functionality
+  useEffect(() => {
+    registerServiceWorker();
+    preloadAllRouteComponents();
+  }, []);
+
+  // Reset scroll position when navigating to a new page
+  useEffect(() => {
+    if (location.hash === '') {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname, location.hash]);
 
   return (
-    <Router>
-      <ScrollToTop />
-      <div className="app-container" data-theme={theme}>
-        <Header theme={theme} toggleTheme={toggleTheme} />
+    <HelmetProvider>
+      <Header theme={theme} toggleTheme={toggleTheme} />
+      
+      <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/resume" element={<Resume />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
-        <Footer theme={theme} toggleTheme={toggleTheme} />
-      </div>
-    </Router>
+      </Suspense>
+      
+      <Footer />
+      <InstallPWA />
+    </HelmetProvider>
   );
 }
 

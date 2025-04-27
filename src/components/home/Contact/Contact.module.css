@@ -619,41 +619,59 @@
 
   /* Responsive styles for different layouts */
   @media (max-width: 992px) {
-    .alternativeLayout .contactContent {
+    .contactContent {
       grid-template-columns: 1fr;
+      gap: 30px;
     }
-
-    .alternativeLayout .contactInfo {
+    
+    .contactInfoColumn {
       order: 2;
     }
-
-    .alternativeLayout .contactForm {
+    
+    .contactFormColumn {
       order: 1;
     }
   }
-
+  
   @media (max-width: 768px) {
-    .alternativeLayout .contactTitle {
-      font-size: 2.2rem;
+    .contactSection {
+      padding: 60px 0;
     }
-
-    .minimalLayout .contactTitle {
-      font-size: 2rem;
+    
+    .contactTitle {
+      font-size: 2.5rem;
+    }
+    
+    .contactHeader {
+      margin-bottom: 40px;
+    }
+    
+    .contactForm, 
+    .contactInfo {
+      padding: 30px;
     }
   }
-
+  
   @media (max-width: 576px) {
-    .alternativeLayout .contactCard {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+    .contactTitle {
+      font-size: 2rem;
     }
-
-    .alternativeLayout .contactCardIcon {
-      margin-bottom: 10px;
+    
+    .contactTitleLine {
+      width: 60px;
+      margin-bottom: 15px;
     }
-
-    .minimalLayout .contactForm {
-      padding: 20px;
+    
+    .contactSubtitle {
+      font-size: 1rem;
+    }
+    
+    .contactForm {
+      padding: 25px;
+    }
+    
+    .formGroup input,
+    .formGroup textarea {
+      padding: 12px;
     }
   }

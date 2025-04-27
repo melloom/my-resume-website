@@ -3,15 +3,15 @@
     position: relative;
     overflow: hidden;
     z-index: 1;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.25s ease, transform 0.25s ease; /* Faster fade-in */
+    opacity: 1; /* Changed from 0 to 1 to make footer visible immediately */
+    transform: none; /* Remove the initial transform */
+    transition: none; /* Remove the transition effect */
     padding-top: 60px;
   }
 
   .footer.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: none; /* Changed to ensure no movement */
   }
 
   .footerGradient {
@@ -328,7 +328,8 @@
     gap: 1rem;
   }
 
-  .social a {
+  .social a,
+  .social button.socialBtn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -340,16 +341,21 @@
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
   }
 
-  .social a:hover {
+  .social a:hover,
+  .social button.socialBtn:hover {
     background-color: var(--primary-color);
     color: white;
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
   }
 
-  .social a::after {
+  .social a::after,
+  .social button.socialBtn::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -363,7 +369,8 @@
     transition: transform 0.5s ease, opacity 0.5s ease;
   }
 
-  .social a:hover::after {
+  .social a:hover::after,
+  .social button.socialBtn:hover::after {
     transform: translate(-50%, -50%) scale(1.5);
     opacity: 1;
   }

@@ -128,6 +128,82 @@
   margin: 0 auto;
 }
 
+.shareButtonContainer {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  z-index: 10;
+}
+
+/* Sticky Share Button */
+.stickyActions {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 90;
+}
+
+.stickyShare {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--primary-color, #6366f1);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.stickyShare:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+/* Ensure icon is always visible on mobile */
+.stickyShare svg {
+  font-size: 1.2rem;
+  min-width: 18px;
+  min-height: 18px;
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* Mobile responsiveness with icon visibility fix */
+@media (max-width: 768px) {
+  .shareButtonContainer {
+    right: 15px;
+    top: 15px;
+  }
+  
+  .stickyActions {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .stickyShare {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .stickyShare span:not(.shareIcon) {
+    display: none;
+  }
+}
+
 /* Light Theme Overrides */
 [data-theme="light"] .contactPage {
   background-color: #f8fafc;

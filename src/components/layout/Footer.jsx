@@ -10,7 +10,8 @@ import {
   FaMapMarkerAlt,
   FaCalendarAlt,
   FaGraduationCap,
-  FaTools
+  FaTools,
+  FaShareAlt // Keep the ShareAlt icon for consistent styling
 } from 'react-icons/fa';
 import styles from './Footer.module.css';
 
@@ -18,20 +19,18 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   const location = useLocation();
   const isContactPage = location.pathname === '/contact';
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true); // Always visible now
 
-  // For animation on scroll
+  // Remove the scroll effect logic or keep it just for element tracking
   useEffect(() => {
     const handleScroll = () => {
+      // Keep this for debugging but don't change visibility
       const bottom = Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 100;
-      if (bottom) {
-        setIsVisible(true);
-      }
     };
 
     window.addEventListener('scroll', handleScroll);
-    // Set visible right away if page is short
-    handleScroll();
+    // Set visible right away
+    setIsVisible(true);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -111,8 +110,24 @@ const Footer = () => {
     setTimeout(removeUnwantedElements, 500);
   }, []);
 
+  // Simple share function to match styling approach of other links
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Melvin Peralta | Portfolio',
+        text: 'Check out Melvin Peralta\'s professional portfolio',
+        url: window.location.href,
+      })
+      .catch((error) => console.log('Error sharing', error));
+    } else {
+      // Fallback - copy URL to clipboard
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
+    }
+  };
+
   return (
-    <footer className={`${styles.footer} ${isVisible ? styles.visible : ''}`}>
+    <footer className={styles.footer}>
       <div className={styles.footerGradient}></div>
 
       <div className="container">
@@ -145,6 +160,7 @@ const Footer = () => {
                   <a
                     href="/"
                     onClick={(e) => handleInternalNavigation(e, '/')}
+
                     className={location.pathname === '/' ? styles.active : ''}
                   >
                     Home
@@ -258,6 +274,14 @@ const Footer = () => {
             <a href="mailto:Melvin.a.p.cruz@gmail.com" aria-label="Email">
               <FaEnvelope />
             </a>
+            {/* Replace ShareButton component with styled anchor/button that matches others */}
+            <button 
+              onClick={handleShare} 
+              className={styles.socialBtn} 
+              aria-label="Share"
+            >
+              <FaShareAlt />
+            </button>
           </div>
           <div className={styles.footerCredit}>
             <p>Made with <FaHeart className={styles.heartIcon} /> in Maryland, USA</p>
@@ -268,4 +292,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;// Footer component
+export default Footer;

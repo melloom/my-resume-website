@@ -1,6 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
+import { FaFileDownload } from 'react-icons/fa';
+import SideNav from '../components/navigation/SideNav';
 import BackToTop from '../components/common/BackToTop';
+import MobileNavDrawer from '../components/navigation/MobileNavDrawer';
+import ShareButton from '../components/common/ShareButton';
 import ResumeHeader from '../components/Resume/header/ResumeHeader';
 import ProfessionalSummary from '../components/Resume/ProfessionalSummary/ProfessionalSummary';
 import ResumeSkills from '../components/Resume/ResumeSkills/ResumeSkills';
@@ -11,7 +16,7 @@ import styles from './Resume.module.css';
 
 const Resume = () => {
   // Reset scroll position on page load
-  useEffect(() => {
+  React.useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
@@ -46,19 +51,32 @@ const Resume = () => {
         <meta name="description" content="Professional resume of Melvin Peralta - Sales Development Representative with expertise in team leadership and client relationship management." />
       </Helmet>
 
-      <SideNav /> {/* Add SideNav to Resume page */}
-      <BackToTop /> {/* Add BackToTop component */}
+      <SideNav />
+      <BackToTop />
+      <MobileNavDrawer />
       
-      {/* Sticky Download Resume Button */}
-      <a 
-        href="/images/school/Resume/Resume.pdf" 
-        download 
-        className={styles.stickyDownload}
-        aria-label="Download Resume PDF"
-      >
-        <FaFileDownload />
-        <span>Download CV</span>
-      </a>
+      {/* Action buttons - Download and Share Resume - Positioned at bottom right */}
+      <div className={styles.stickyActions}>
+        <a 
+          href="/images/school/Resume/Resume.pdf" 
+          download 
+          className={styles.stickyDownload}
+          aria-label="Download Resume PDF"
+        >
+          <FaFileDownload />
+          <span>Download CV</span>
+        </a>
+        
+        {/* Share Resume Button with explicit icon rendering */}
+        <ShareButton 
+          type="resume" 
+          className={styles.stickyShare} 
+          showLabel={true}
+          title="Melvin Peralta | Professional Resume"
+          text="Check out Melvin Peralta's professional resume!"
+          forceShowIcon={true} // Add this prop to force icon display
+        />
+      </div>
 
       <main className={styles.resumePage} id="top">
         <div className={styles.resumeBackground}></div>

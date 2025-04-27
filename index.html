@@ -6,6 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Melvin Peralta - Professional Portfolio and Resume" />
 
+    <!-- Theme initialization script - prevents flash of wrong theme -->
+    <script>
+      (function() {
+        // Get theme from localStorage or use dark as default
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        // Apply theme immediately to prevent flash
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        // Save the preference for consistency
+        localStorage.setItem('theme', savedTheme);
+      })();
+    </script>
+
     <!-- Add inline styles to ensure the page isn't blank during loading -->
     <style>
       body {
@@ -18,19 +30,25 @@
       #root {
         min-height: 100vh;
       }
+      
+      /* Add conditional styling for light mode */
+      html[data-theme="light"] body {
+        background-color: #f8fafc;
+        color: #1e293b;
+      }
     </style>
 
-    <!-- Preload critical assets -->
-    <link rel="preload" href="/assets/images/Profile pic 2.jpg" as="image" />
+    <!-- Preload critical assets - Fix path to match actual location -->
+    <link rel="preload" href="/photo 1.jpg" as="image" />
 
     <!-- Preconnect to external resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Preload education images with smaller sizes -->
-    <link rel="preload" href="/assets/images/anne-arundel-cc.jpg" as="image" imagesizes="320px" />
-    <link rel="preload" href="/assets/images/cat-north.jpg" as="image" imagesizes="320px" />
-    <link rel="preload" href="/assets/images/Meade-hs.jpg" as="image" imagesizes="320px" />
+    <!-- Fix preloaded education image paths to match actual usage -->
+    <link rel="preload" href="/images/school/anne-arundel-cc.jpg" as="image" />
+    <link rel="preload" href="/images/school/cat-north.jpg" as="image" />
+    <link rel="preload" href="/images/school/Meade-hs.jpg" as="image" />
 
     <!-- Add image dimensions to enable browser to allocate space before loading -->
     <meta name="image-anne-arundel-cc" content="320x120" />

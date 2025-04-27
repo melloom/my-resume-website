@@ -142,26 +142,35 @@
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Navigation buttons */
-.navigationButtons {
+/* Combined layout for social links and navigation button - Fix sizing consistency */
+.buttonsContainer {
   display: flex;
-  width: auto;
-  flex: 1; /* Adjusted ratio */
-  margin: 0; /* Remove margin that was causing misalignment */
-  height: auto; /* Remove fixed height */
+  width: 100%;
+  gap: 1rem;
+  margin-top: 1rem;
+  align-items: stretch; /* Ensure all children stretch to same height */
 }
 
-/* Social links and navigation buttons - unified styles */
+/* Navigation buttons - ensure consistent sizing with social links */
+.navigationButtons {
+  display: flex;
+  flex: 1;
+  margin: 0;
+  height: auto;
+}
+
+/* Social links - ensure consistent sizing with navigation buttons */
 .socialLinks {
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  width: auto;
-  flex: 2; /* Adjusted ratio */
-  margin: 0; /* Remove margin that was causing misalignment */
-  height: auto; /* Remove fixed height */
+  flex: 1; /* Changed from 2 to 1 for equal distribution */
+  margin: 0;
+  height: auto;
 }
 
+/* Ensure all buttons have identical base styling */
+.navButton,
 .socialLink {
   display: flex;
   align-items: center;
@@ -170,28 +179,24 @@
   background: rgba(99, 102, 241, 0.1);
   color: var(--primary-color, #6366f1);
   border: 1px solid var(--primary-color, #6366f1);
-  padding: 0.75rem 1.5rem; /* Increased horizontal padding */
+  padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
   transition: all 0.3s ease;
   text-decoration: none;
-  width: auto;
-  min-width: 140px; /* Increased minimum width */
+  flex: 1; /* Make all buttons grow equally */
+  height: 48px;
   text-align: center;
-  flex: 1;
-  max-width: 220px; /* Increased maximum width */
-  height: 48px; /* Fixed height to match other buttons */
-  min-width: 0;
-  width: 100%;
+  min-width: 0; /* Remove any minimum width constraints */
+  max-width: none; /* Remove any maximum width constraints */
 }
 
-/* Combined layout for social links and navigation button */
-.buttonsContainer {
-  display: flex;
-  width: 100%;
-  gap: 1rem;
-  margin-top: 1rem;
-  align-items: stretch; /* Stretch children */
+/* Consistent hover styles */
+.navButton:hover, 
+.socialLink:hover {
+  background: rgba(99, 102, 241, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
 }
 
 /* Add these styles to properly constrain the image */
@@ -271,39 +276,6 @@
   }
 }
 
-/* Fix missing navButton style to match social links */
-.navButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: rgba(99, 102, 241, 0.1);
-  color: var(--primary-color, #6366f1);
-  border: 1px solid var(--primary-color, #6366f1);
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  width: 100%;
-  height: 48px;
-  text-align: center;
-}
-
-.navButton:hover, .socialLink:hover {
-  background: rgba(99, 102, 241, 0.2);
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
-}
-
-/* Ensure both button containers have consistent styling */
-.navigationButtons {
-  display: flex;
-  flex: 1;
-  margin: 0;
-  height: auto;
-}
-
 /* Job title animation styles */
 .jobTitleAnimation {
   display: flex;
@@ -322,8 +294,10 @@
 .titleContainer {
   position: relative;
   display: inline-flex;
-  align-items: center; /* Add this to vertically align cursor */
+  align-items: center;
   min-height: 2.2rem;
+  height: 2.2rem; /* Fixed height to prevent content shifting */
+  overflow: hidden; /* Contain any overflow text */
 }
 
 .jobTitle {
@@ -379,11 +353,17 @@
     font-size: 1.5rem;
     flex-direction: column;
     align-items: flex-start;
+    height: auto; /* Overall container can be flexible */
   }
 
   .staticPrefix {
     margin-right: 0;
     margin-bottom: 0.25rem;
+  }
+  
+  .titleContainer {
+    height: 1.8rem; /* Smaller fixed height for mobile */
+    min-height: 1.8rem;
   }
 }
 

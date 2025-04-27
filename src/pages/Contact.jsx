@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import ShareButton from '../components/common/ShareButton';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaQuestionCircle, FaGlobe } from 'react-icons/fa';
 import ContactHero from '../components/contact/ContactHero/ContactHero';
 import ContactForm from '../components/contact/ContactForm/ContactForm';
@@ -8,7 +10,7 @@ import BackToTop from '../components/common/BackToTop';
 import styles from './Contact.module.css';
 
 const Contact = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isFastTransition, setIsFastTransition] = useState(false);
 
   // Contact information data
   const contactMethods = [
@@ -85,96 +87,87 @@ const Contact = () => {
     }
   ];
 
-  useEffect(() => {
-    // Simulate loading and check if scrolling is needed
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-      
-      // Check if navigation flagged for contact section scrolling
-      const needsScroll = sessionStorage.getItem('forceScrollTopContact') === 'true';
-      if (needsScroll) {
-        window.scrollTo(0, 0);
-        sessionStorage.removeItem('forceScrollTopContact');
-      }
-      
-      // Additional check for anchor navigation
-      const hash = window.location.hash;
-      if (hash) {
-        const element = document.querySelector(hash);
-        if (element) {
-          setTimeout(() => {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }, 100);
-        }
-      }
-    }, 300);
-    
-    return () => clearTimeout(timer);
-  }, []);
-  
   return (
-    <main className={styles.contactPage}>
-      <BackToTop />
+    <>
+      <Helmet>
+        <title>Contact Me - Melvin Peralta</title>
+        <meta name="description" content="Get in touch with Melvin Peralta, a sales development professional with a knack for tech. Let's connect!" />
+      </Helmet>
+
+      {/* Sticky Share Button */}
+      <div className={styles.stickyActions}>
+        <ShareButton 
+          type="page" 
+          className={styles.stickyShare} 
+          showLabel={true}
+          title="Melvin Peralta | Contact"
+          text="Connect with Melvin Peralta!"
+        />
+      </div>
       
-      {/* Hero Section */}
-      <section id="top" className={styles.section}>
-        <ContactHero />
-      </section>
-      
-      {/* Contact Information Section */}
-      <section id="contact-info" className={`${styles.section} ${styles.infoSection}`}>
-        <div className={styles.sectionContainer}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.titleIcon}><FaMapMarkerAlt /></span>
-            Contact Information
-          </h2>
-          <div className={styles.contactCardsGrid}>
-            {contactMethods.map(method => (
-              <ContactInfo 
-                key={method.id}
-                icon={method.icon}
-                title={method.title}
-                value={method.value}
-                link={method.link}
-                description={method.description}
-              />
-            ))}
+      <main className={styles.contactPage} id="top">
+        <BackToTop />
+        
+        {/* Hero Section */}
+        <section id="top" className={styles.section}>
+          <ContactHero />
+        </section>
+        
+        {/* Contact Information Section */}
+        <section id="contact-info" className={`${styles.section} ${styles.infoSection}`}>
+          <div className={styles.sectionContainer}>
+            <h2 className={styles.sectionTitle}>
+              <span className={styles.titleIcon}><FaMapMarkerAlt /></span>
+              Contact Information
+            </h2>
+            <div className={styles.contactCardsGrid}>
+              {contactMethods.map(method => (
+                <ContactInfo 
+                  key={method.id}
+                  icon={method.icon}
+                  title={method.title}
+                  value={method.value}
+                  link={method.link}
+                  description={method.description}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-      
-      {/* Contact Form Section */}
-      <section id="contact-form" className={`${styles.section} ${styles.formSection}`}>
-        <div className={styles.sectionContainer}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.titleIcon}><FaEnvelope /></span>
-            Send Me a Message
-          </h2>
-          <div className={styles.formContainer}>
-            <ContactForm isContactPage={true} />
+        </section>
+        
+        {/* Contact Form Section */}
+        <section id="contact-form" className={`${styles.section} ${styles.formSection}`}>
+          <div className={styles.sectionContainer}>
+            <h2 className={styles.sectionTitle}>
+              <span className={styles.titleIcon}><FaEnvelope /></span>
+              Send Me a Message
+            </h2>
+            <div className={styles.formContainer}>
+              <ContactForm isContactPage={true} />
+            </div>
           </div>
-        </div>
-      </section>
-      
-      {/* FAQ Section */}
-      <section id="faq" className={`${styles.section} ${styles.faqSection}`}>
-        <div className={styles.sectionContainer}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.titleIcon}><FaQuestionCircle /></span>
-            Frequently Asked Questions
-          </h2>
-          <div className={styles.faqContainer}>
-            {faqs.map((faq, index) => (
-              <ContactFAQ 
-                key={index}
-                question={faq.question}
-                answer={faq.answer}
-              />
-            ))}
+        </section>
+        
+        {/* FAQ Section */}
+        <section id="faq" className={`${styles.section} ${styles.faqSection}`}>
+          <div className={styles.sectionContainer}>
+            <h2 className={styles.sectionTitle}>
+              <span className={styles.titleIcon}><FaQuestionCircle /></span>
+              Frequently Asked Questions
+            </h2>
+            <div className={styles.faqContainer}>
+              {faqs.map((faq, index) => (
+                <ContactFAQ 
+                  key={index}
+                  question={faq.question}
+                  answer={faq.answer}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </>
   );
 };
 
