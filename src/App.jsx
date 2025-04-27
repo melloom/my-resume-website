@@ -1,15 +1,15 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { registerServiceWorker } from './pwaRegistration';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import PageLoader from './components/common/PageLoader';
 import InstallPWA from './components/common/InstallPWA';
+import { ThemeProvider } from './context/ThemeContext';
+import BackToTop from './components/common/BackToTop';
 import CacheBuster from './components/common/CacheBuster';
-import { preloadAllRouteComponents } from './utils/routePreloader';
 
-// Lazy loaded pages for code splitting
+// Lazy load pages for better performance
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Resume = lazy(() => import('./pages/Resume'));
@@ -35,12 +35,6 @@ function App() {
     document.documentElement.setAttribute('data-theme', newTheme);
   };
 
-  // Register service worker for PWA functionality
-  useEffect(() => {
-    registerServiceWorker();
-    preloadAllRouteComponents();
-  }, []);
-
   // Reset scroll position when navigating to a new page
   useEffect(() => {
     if (location.hash === '') {
@@ -51,7 +45,7 @@ function App() {
   return (
     <HelmetProvider>
       <div className="app-container">
-        <ThemeProvider theme={theme}>
+        <ThemeProvider>
           <Header theme={theme} toggleTheme={toggleTheme} />
           <Suspense fallback={<PageLoader />}>
             <Routes>
