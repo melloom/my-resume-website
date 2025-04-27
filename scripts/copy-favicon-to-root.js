@@ -1,78 +1,66 @@
-/**
- * Script to copy favicon to the root public directory for browsers that look for it there
- */
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+const fs = require('fs');
+const path = require('path');
 
-// Get current directory
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, '..');
+// Define source and destination paths
+const sourceDir = path.join(__dirname, '../public/icons');
+const destDir = path.join(__dirname, '../dist'); // Vite builds to 'dist' by default
 
-// Possible source paths for favicon in priority order
-const possibleSourcePaths = [
-  path.join(projectRoot, 'public', 'icons', 'favicon.ico'),
-  path.join(projectRoot, 'public', 'favicon.ico'),
-  path.join(projectRoot, 'src', 'assets', 'favicon.ico'),
-  path.join(projectRoot, 'src', 'assets', 'icons', 'favicon.ico'),
+// Files to copy to root
+const filesToCopy = [
+  'favicon.ico',
+  'favicon-16x16.png',
+  'favicon-32x32.png',
+  'apple-touch-icon.png',
+  'safari-pinned-tab.svg',
+  'logo192.png',
+  'logo512.png',
+  'maskable_icon.png'
 ];
 
-// Target path where favicon should be copied
-const targetPath = path.join(projectRoot, 'public', 'favicon.ico');
+/**
+ * Copy favicon files from public/icons to build root
+ */
+function copyFaviconsToRoot() {
+  console.log('📂 Copying favicon files to build root directory...');
 
-// Create directories if they don't exist
-const ensureDirectoryExists = (filePath) => {
-  const dirname = path.dirname(filePath);
-  if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname, { recursive: true });
-    console.log(`Created directory: ${dirname}`);
+  // Create destination directory if it doesn't exist
+  if (!fs.existsSync(destDir)) {
+    console.log(`Creating build directory: ${destDir}`);
+    fs.mkdirSync(destDir, { recursive: true });
   }
-};
 
-// Main copy function
-const copyFaviconToRoot = () => {
-  console.log('Attempting to copy favicon to root public directory...');
-  
-  // Ensure public directory exists
-  ensureDirectoryExists(targetPath);
-  
-  // If target already exists, we don't need to copy
-  if (fs.existsSync(targetPath)) {
-    console.log('✅ favicon.ico already exists in public directory.');
-    return;
-  }
-  
-  // Try each possible source path
-  for (const sourcePath of possibleSourcePaths) {
-    if (fs.existsSync(sourcePath)) {
-      try {
-        fs.copyFileSync(sourcePath, targetPath);
-        console.log(`✅ Successfully copied favicon from ${sourcePath} to ${targetPath}`);
-        return;
-      } catch (error) {
-        console.error(`❌ Error copying from ${sourcePath}:`, error);
+  // Keep track of successful copies
+  let successCount = 0;
+  let errorCount = 0;
+
+  // Copy each file
+  filesToCopy.forEach(file => {
+    const sourcePath = path.join(sourceDir, file);
+    const destPath = path.join(destDir, file);
+
+    try {
+      // Only copy if source file exists
+      if (fs.existsSync(sourcePath)) {
+        fs.copyFileSync(sourcePath, destPath);
+        console.log(`✅ Copied: ${file}`);
+        successCount++;
+      } else {
+        console.warn(`⚠️ Source file not found: ${sourcePath}`);
+        errorCount++;
       }
+    } catch (error) {
+      console.error(`❌ Error copying ${file}:`, error.message);
+      errorCount++;
     }
-  }
-  
-  // If we get here, none of the source files existed
-  console.warn('⚠️ No favicon.ico found in any of the expected locations.');
-  console.log('Creating a placeholder favicon...');
-  
-  try {
-    // Create a minimal 16x16 transparent favicon as fallback
-    const minimalFavicon = Buffer.from(
-      'AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAJ6TrAFy+8QCC0vgA7+/vAC6n7ACE0/gAS7fvAKzc+ADAwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEREREREREREREREREREREQzMzMzMzMzRDd3d3d3d3REN3d3d3d3dEQ3d3d3d3d0RDd3d3d3dHRERERERERERDMzMzMzMzNERERERERERERVVVVVVVVUREREREREREREVVVVVVVVVERERERERERERDMzMzMzMzNEREREREREREAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==', 
-      'base64'
-    );
-    
-    fs.writeFileSync(targetPath, minimalFavicon);
-    console.log('✅ Created a placeholder favicon.ico in public directory');
-  } catch (error) {
-    console.error('❌ Failed to create placeholder favicon:', error);
-  }
-};
+  });
 
-// Execute the function
-copyFaviconToRoot();
+  console.log(`\n📝 Summary: ${successCount} files copied, ${errorCount} errors\n`);
+
+  // Exit with error code if any files failed to copy
+  if (errorCount > 0) {
+    process.exit(1);
+  }
+}
+
+// Run the copy function
+copyFaviconsToRoot();

@@ -35,16 +35,11 @@
     "sass": "^1.66.1"
   },
   "scripts": {
-    "lint": "eslint .",
-    "test": "vitest run",
-    "test:watch": "vitest",
     "dev": "vite",
-    "start": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/copy-favicon-to-root.js",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "generate-icons": "node scripts/generate-icons.js",
-    "copy-favicon": "node scripts/copy-favicon-to-root.js",
-    "postbuild": "npm run copy-favicon"
+    "favicons": "node scripts/copy-favicon-to-root.js"
   },
   "browserslist": {
     "production": [
