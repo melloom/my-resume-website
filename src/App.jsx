@@ -6,6 +6,7 @@ import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import PageLoader from './components/common/PageLoader';
 import InstallPWA from './components/common/InstallPWA';
+import CacheBuster from './components/common/CacheBuster';
 import { preloadAllRouteComponents } from './utils/routePreloader';
 
 // Lazy loaded pages for code splitting
@@ -49,20 +50,24 @@ function App() {
 
   return (
     <HelmetProvider>
-      <Header theme={theme} toggleTheme={toggleTheme} />
-      
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/resume" element={<Resume />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-      
-      <Footer />
-      <InstallPWA />
+      <div className="app-container">
+        <ThemeProvider theme={theme}>
+          <Header theme={theme} toggleTheme={toggleTheme} />
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/resume" element={<Resume />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+          <Footer />
+          <BackToTop />
+          {process.env.NODE_ENV === 'production' && <CacheBuster />}
+          <InstallPWA />
+        </ThemeProvider>
+      </div>
     </HelmetProvider>
   );
 }

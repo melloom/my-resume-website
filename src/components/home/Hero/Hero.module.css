@@ -154,6 +154,7 @@
 /* Navigation buttons - ensure consistent sizing with social links */
 .navigationButtons {
   display: flex;
+  gap: 1rem; /* Add gap between navigation buttons */
   flex: 1;
   margin: 0;
   height: auto;
@@ -189,6 +190,7 @@
   text-align: center;
   min-width: 0; /* Remove any minimum width constraints */
   max-width: none; /* Remove any maximum width constraints */
+  box-sizing: border-box; /* Include padding and border in width calculation */
 }
 
 /* Consistent hover styles */
@@ -343,10 +345,22 @@
 @media (max-width: 768px) {
   .buttonsContainer {
     flex-direction: column;
+    gap: 1.5rem; /* Increased gap for mobile */
   }
 
   .navigationButtons, .socialLinks {
     width: 100%;
+    gap: 1rem; /* Ensure consistent gap */
+  }
+  
+  .navigationButtons {
+    flex-direction: column; /* Stack navigation buttons on mobile */
+  }
+  
+  .navButton,
+  .socialLink {
+    width: 100%; /* Full width buttons on mobile */
+    margin-bottom: 0; /* Remove any bottom margin */
   }
 
   .jobTitleAnimation {

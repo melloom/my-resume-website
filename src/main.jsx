@@ -1,15 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
+import { registerServiceWorker, protectThemeSetting } from './pwaRegistration';
 import './assets/styles/global.css';
 
-// Create root and render the app
+// Protect theme setting from service worker interference
+protectThemeSetting();
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <Router>
       <App />
-    </BrowserRouter>
+    </Router>
   </React.StrictMode>
 );
+
+// Register service worker for PWA support
+if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+  // Delay service worker registration to ensure theme settings are stable
+  setTimeout(() => {
+    registerServiceWorker();
+  }, 1000);
+}

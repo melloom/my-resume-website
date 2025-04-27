@@ -1,90 +1,105 @@
-import { Workbox } from 'workbox-window';
+// PWA Registration with enhanced handling for theme issues
+let registration = null;
 
-// Register service worker for production builds
-export function registerServiceWorker() {
+export const registerServiceWorker = () => {
   if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-    const wb = new Workbox('/serviceWorker.js');
-    
-    // Add event listeners for various Service Worker states
-    wb.addEventListener('installed', event => {
-      if (event.isUpdate) {
-        // If this is an update, show refresh notification
-        if (confirm('New content is available! Click OK to refresh.')) {
+    window.addEventListener('load', () => {
+      const swUrl = '/serviceWorker.js';
+
+      // Preserve theme setting before service worker initialization
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      
+      navigator.serviceWorker.register(swUrl)
+        .then(reg => {
+          registration = reg;
+          console.log('Service worker registered:', reg);
+          
+          // Check if there's a waiting worker (update available)
+          if (reg.waiting) {
+            updateServiceWorker(reg.waiting);
+          }
+          
+          // Handle new installations
+          reg.onupdatefound = () => {
+            const installingWorker = reg.installing;
+            if (installingWorker) {
+              installingWorker.onstatechange = () => {
+                if (installingWorker.state === 'installed') {
+                  if (navigator.serviceWorker.controller) {
+                    console.log('New content is available; please refresh.');
+                    // Notify the user about the update if needed
+                  }
+                }
+              };
+            }
+          };
+          
+          // Restore theme after service worker initialization
+          setTimeout(() => {
+            localStorage.setItem('theme', savedTheme);
+            document.documentElement.setAttribute('data-theme', savedTheme);
+          }, 100);
+        })
+        .catch(error => {
+          console.error('Error during service worker registration:', error);
+        });
+        
+      // Handle controller changes (when skipWaiting() is called)
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('Controller changed - reloading for fresh content');
+        // Restore theme setting
+        localStorage.setItem('theme', savedTheme);
+        // Reload the page to ensure all assets are refreshed
+        if (!window.__reloading) {
+          window.__reloading = true;
           window.location.reload();
         }
-      }
-    });
-
-    wb.addEventListener('waiting', () => {
-      // If a waiting worker is found (update waiting to activate)
-      console.log('A new service worker is waiting to activate.');
-    });
-
-    wb.addEventListener('activated', (event) => {
-      if (!event.isUpdate) {
-        console.log('Service worker activated for the first time!');
-      }
-    });
-
-    wb.addEventListener('controlling', () => {
-      console.log('Service worker is now controlling the page.');
-    });
-
-    wb.addEventListener('message', event => {
-      console.log(`Message received from service worker: ${event.data}`);
-    });
-
-    // Register the service worker
-    wb.register()
-      .then(registration => {
-        console.log('Service worker registered successfully:', registration);
-        
-        // Check for updates every 2 hours
-        setInterval(() => {
-          wb.update();
-        }, 2 * 60 * 60 * 1000);
-      })
-      .catch(error => {
-        console.error('Service worker registration failed:', error);
       });
-
-    // Check if the app was installed
-    window.addEventListener('appinstalled', (event) => {
-      console.log('Application was installed', event);
     });
   }
-}
+};
 
-// Add a function to check if the app can be installed
-export function checkInstallable(setInstallable) {
-  if ('BeforeInstallPromptEvent' in window) {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevent the mini-infobar from appearing on mobile
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      window.deferredPrompt = e;
-      // Update UI notify the user they can install the PWA
-      if (setInstallable) {
-        setInstallable(true);
+// Force update of service worker
+export const updateServiceWorker = (waitingWorker) => {
+  if (waitingWorker) {
+    waitingWorker.postMessage({ type: 'SKIP_WAITING' });
+  }
+};
+
+// Force cache clearing - use in dev tools or add a refresh button
+export const clearServiceWorkerCache = () => {
+  if (!registration) {
+    return Promise.reject('No service worker registration found');
+  }
+  
+  return new Promise((resolve, reject) => {
+    const messageChannel = new MessageChannel();
+    
+    messageChannel.port1.onmessage = (event) => {
+      if (event.data === 'Caches cleared successfully') {
+        resolve(true);
+      } else {
+        reject('Cache clearing failed');
       }
-    });
-  }
-}
-
-// Add a function to install the app
-export function installApp() {
-  const promptEvent = window.deferredPrompt;
-  if (!promptEvent) {
-    // The deferred prompt isn't available.
-    return;
-  }
-  // Show the install prompt.
-  promptEvent.prompt();
-  // Log the result
-  promptEvent.userChoice.then((result) => {
-    console.log('User installation choice:', result.outcome);
-    // Reset the deferred prompt variable, since
-    // prompt() can only be called once.
-    window.deferredPrompt = null;
+    };
+    
+    if (registration.active) {
+      registration.active.postMessage({
+        type: 'CLEAR_CACHE'
+      }, [messageChannel.port2]);
+    } else {
+      reject('No active service worker found');
+    }
   });
-}
+};
+
+// Add theme protection - call on app init
+export const protectThemeSetting = () => {
+  // Detect if theme was changed by service worker
+  const currentTheme = localStorage.getItem('theme');
+  const appliedTheme = document.documentElement.getAttribute('data-theme');
+  
+  if (currentTheme && currentTheme !== appliedTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+  }
+};

@@ -1,5 +1,5 @@
 // Cache names
-const CACHE_NAME = 'melvin-peralta-portfolio-v1';
+const CACHE_NAME = 'melvin-peralta-portfolio-v2'; // Increment version to force cache refresh
 const RUNTIME_CACHE = 'runtime-cache-v1';
 const OFFLINE_URL = '/offline.html';
 
@@ -9,10 +9,7 @@ const ASSETS_TO_CACHE = [
   '/index.html',
   '/offline.html',
   '/photo 1.jpg',
-  '/favicon.ico',
-  '/manifest.json',
-  '/static/js/main.js',
-  '/static/css/main.css',
+  '/icons/favicon.ico',
   '/icons/logo192.png',
   '/icons/logo512.png',
   '/icons/maskable_icon.png',
@@ -26,136 +23,112 @@ const ASSETS_TO_CACHE = [
   '/images/school/Resume/Resume.pdf'
 ];
 
-// Install event - Cache core assets
-self.addEventListener('install', event => {
+// Install event - cache critical files but don't make it blocking
+self.addEventListener('install', (event) => {
+  // Use waitUntil to ensure the service worker won't install until caching is complete
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Caching core assets');
+        console.log('Opened cache');
         return cache.addAll(ASSETS_TO_CACHE);
       })
-      .then(() => self.skipWaiting())
-      .catch(error => console.log('Failed to cache assets: ', error))
+      .then(() => {
+        // Skip waiting to ensure the new service worker activates immediately
+        return self.skipWaiting();
+      })
   );
 });
 
-// Activate event - Clean up old caches
-self.addEventListener('activate', event => {
+// Activate event - clean up old caches and take control immediately
+self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames
-          .filter(name => name !== CACHE_NAME && name !== RUNTIME_CACHE)
-          .map(name => {
-            console.log('Deleting old cache:', name);
-            return caches.delete(name);
-          })
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
       );
-    }).then(() => self.clients.claim())
-  );
-});
-
-// Helper function to determine if request is an image
-const isImage = (request) => {
-  return request.destination === 'image' || 
-    request.url.match(/\.(jpe?g|png|gif|svg|webp)$/i);
-};
-
-// Helper function to determine if request is a document
-const isDocument = (request) => {
-  return request.destination === 'document' || 
-    request.url.endsWith('.html');
-};
-
-// Helper function to determine if request is for an API
-const isApiRequest = (request) => {
-  return request.url.includes('/api/');
-};
-
-// Helper function to determine if request is for a font
-const isFont = (request) => {
-  return request.destination === 'font' || 
-    request.url.match(/\.(woff|woff2|ttf|otf|eot)$/i);
-};
-
-// Fetch event - Implement caching strategies
-self.addEventListener('fetch', event => {
-  // Skip cross-origin requests
-  if (!event.request.url.startsWith(self.location.origin)) {
-    return;
-  }
-
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      // Return cached response if found
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-
-      return caches.open(RUNTIME_CACHE).then(cache => {
-        return fetch(event.request)
-          .then(response => {
-            // Cache successful responses
-            if (response.status === 200) {
-              // Cache images and fonts with cache-first strategy
-              if (isImage(event.request) || isFont(event.request)) {
-                cache.put(event.request, response.clone());
-              }
-              
-              // Cache HTML pages with network-first strategy
-              if (isDocument(event.request) && !event.request.url.includes('chrome-extension://')) {
-                cache.put(event.request, response.clone());
-              }
-            }
-            return response;
-          })
-          .catch(error => {
-            console.log('Fetch failed; returning offline page instead.', error);
-            
-            // For HTML documents, return the offline page
-            if (isDocument(event.request)) {
-              return caches.match(OFFLINE_URL);
-            }
-            
-            // For API requests, return an empty JSON response
-            if (isApiRequest(event.request)) {
-              return new Response(JSON.stringify({ error: 'You are offline' }), {
-                headers: { 'Content-Type': 'application/json' }
-              });
-            }
-            
-            // For images, return a placeholder
-            if (isImage(event.request)) {
-              return caches.match('/icons/offline-image.png');
-            }
-            
-            // Default fallback
-            return new Response('Network error happened', {
-              status: 408,
-              headers: { 'Content-Type': 'text/plain' },
-            });
-          });
-      });
+    }).then(() => {
+      // Take control of all clients immediately
+      return self.clients.claim();
     })
   );
 });
 
-// Listen for push notifications
-self.addEventListener('push', event => {
-  const title = 'Melvin Peralta Portfolio';
-  const options = {
-    body: event.data.text() || 'New update from Melvin Peralta',
-    icon: '/icons/logo192.png',
-    badge: '/icons/notification-badge.png'
-  };
+// Fetch event - implement a network-first strategy for most resources
+self.addEventListener('fetch', (event) => {
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') return;
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  // Skip theme-related localStorage requests
+  const url = new URL(event.request.url);
+  if (url.pathname.includes('theme') || 
+      event.request.url.includes('theme') || 
+      event.request.headers.get('purpose') === 'theme-detection') {
+    return;
+  }
+
+  // Network-first strategy with cache fallback
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        // Clone the response as it can only be consumed once
+        const responseToCache = response.clone();
+        
+        // Only cache successful responses from our origin
+        if (response.status === 200 && event.request.url.startsWith(self.location.origin)) {
+          caches.open(CACHE_NAME)
+            .then(cache => {
+              // Don't cache localStorage access or API responses
+              if (!event.request.url.includes('localStorage') && 
+                  !event.request.url.includes('/api/')) {
+                cache.put(event.request, responseToCache);
+              }
+            });
+        }
+        
+        return response;
+      })
+      .catch(() => {
+        // Try to get from cache if network fails
+        return caches.match(event.request)
+          .then(cachedResponse => {
+            if (cachedResponse) {
+              return cachedResponse;
+            }
+            
+            // For navigation requests, return the offline page
+            if (event.request.mode === 'navigate') {
+              return caches.match(OFFLINE_URL);
+            }
+            
+            return new Response('Network error happened', {
+              status: 408,
+              headers: { 'Content-Type': 'text/plain' }
+            });
+          });
+      })
+  );
 });
 
-// Handle notification clicks
-self.addEventListener('notificationclick', event => {
-  event.notification.close();
-  event.waitUntil(
-    clients.openWindow('/')
-  );
+// Add message handler to force cache refresh when needed
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  
+  if (event.data && event.data.type === 'CLEAR_CACHE') {
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => caches.delete(cacheName))
+      );
+    }).then(() => {
+      console.log('All caches cleared');
+      // Notify client that caches were cleared
+      event.ports[0].postMessage('Caches cleared successfully');
+    });
+  }
 });

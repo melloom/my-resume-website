@@ -9,12 +9,35 @@
     <!-- Theme initialization script - prevents flash of wrong theme -->
     <script>
       (function() {
-        // Get theme from localStorage or use dark as default
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        // Apply theme immediately to prevent flash
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        // Save the preference for consistency
-        localStorage.setItem('theme', savedTheme);
+        try {
+          // Get theme from localStorage or use dark as default
+          const savedTheme = localStorage.getItem('theme') || 'dark';
+          // Apply theme immediately to prevent flash
+          document.documentElement.setAttribute('data-theme', savedTheme);
+          // Save the preference for consistency
+          localStorage.setItem('theme', savedTheme);
+          
+          // Add a flag to prevent service worker from overriding theme
+          window.__THEME_INITIALIZED__ = true;
+          
+          // Force dark mode styles immediately to prevent gray flash
+          if (savedTheme === 'dark') {
+            document.documentElement.style.colorScheme = 'dark';
+            // Add inline style to ensure dark background immediately
+            const style = document.createElement('style');
+            style.textContent = `
+              body { 
+                background-color: #0f172a !important; 
+                color: #ffffff !important;
+              }
+            `;
+            document.head.appendChild(style);
+          }
+        } catch (e) {
+          // Fallback to dark theme if localStorage fails
+          document.documentElement.setAttribute('data-theme', 'dark');
+          console.error('Theme initialization error:', e);
+        }
       })();
     </script>
 
