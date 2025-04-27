@@ -29,11 +29,11 @@ if (!fs.existsSync(iconDestDir)) {
 // Try to find a source image to use as the base
 let sourceImage;
 const possibleSourceImages = [
+  path.join(iconDestDir, 'favicon.ico'), // Prioritize using favicon.ico from public directory
   path.join(iconSrcDir, 'logo.png'),
   path.join(iconSrcDir, 'logo.jpg'),
   path.join(__dirname, '../public/logo.png'),
   path.join(__dirname, '../src/assets/logo.png'),
-  // Check if any favicon file already exists to use as source
   path.join(iconDestDir, 'favicon-32x32.png')
 ];
 
@@ -92,80 +92,44 @@ async function generateIcons() {
       console.warn('⚠️ Source image is smaller than 512x512px. Icons may appear blurry or pixelated.');
     }
 
-    // Create temporary file paths with unique names to avoid conflicts
-    const tempDir = fs.mkdtempSync(path.join(require('os').tmpdir(), 'icons-'));
-    
-    // Generate icons with unique output filenames
+    // Generate icons
     await Promise.all([
       // Basic favicons
-      image.clone().resize(16, 16).png().toFile(path.join(tempDir, 'favicon-16x16.png')),
-      image.clone().resize(32, 32).png().toFile(path.join(tempDir, 'favicon-32x32.png')),
+      image.clone().resize(16, 16).png().toFile(path.join(iconDestDir, 'favicon-16x16.png')),
+      image.clone().resize(32, 32).png().toFile(path.join(iconDestDir, 'favicon-32x32.png')),
       
       // Apple touch icon
-      image.clone().resize(180, 180).png().toFile(path.join(tempDir, 'apple-touch-icon.png')),
+      image.clone().resize(180, 180).png().toFile(path.join(iconDestDir, 'apple-touch-icon.png')),
       
       // PWA icons
-      image.clone().resize(192, 192).png().toFile(path.join(tempDir, 'logo192.png')),
-      image.clone().resize(512, 512).png().toFile(path.join(tempDir, 'logo512.png')),
+      image.clone().resize(192, 192).png().toFile(path.join(iconDestDir, 'logo192.png')),
+      image.clone().resize(512, 512).png().toFile(path.join(iconDestDir, 'logo512.png')),
       
-      // Maskable icon with padding for safe zone
-      image.clone().resize(512, 512).png().toFile(path.join(tempDir, 'maskable_icon.png')),
+      // Maskable icon
+      image.clone().resize(512, 512).png().toFile(path.join(iconDestDir, 'maskable_icon.png')),
       
-
-      // Create safari-pinned-tab as PNG first (will be converted later if needed)
-      // Use grayscale instead of extractChannel which was causing issues
+      // Create safari-pinned-tab as SVG
       image.clone()
         .resize(32, 32)
-        .grayscale()  // Convert to grayscale instead of extractChannel
-        .threshold(128) // Apply threshold to make it more suitable for monochrome
+        .grayscale()
+        .threshold(128)
         .png()
-        .toFile(path.join(tempDir, 'safari-pinned-tab.png')),
-
-      // Favicon.ico (simple version - just copy the 32x32 PNG)
-      image.clone().resize(32, 32).png().toFile(path.join(tempDir, 'favicon.ico')),
+        .toFile(path.join(iconDestDir, 'safari-pinned-tab.png'))
     ]);
-    
-    // Copy the temporary files to the destination directory
-    const files = fs.readdirSync(tempDir);
-    
-    for (const file of files) {
-      const tempFilePath = path.join(tempDir, file);
-      const destFilePath = path.join(iconDestDir, file);
-      
-      // Remove destination file if it exists to avoid overwrite errors
-      if (fs.existsSync(destFilePath)) {
-        fs.unlinkSync(destFilePath);
-      }
-      
-      // Copy from temp to destination
-      fs.copyFileSync(tempFilePath, destFilePath);
-      console.log(`✅ Generated: ${file}`);
-    }
-    
-    // Create the SVG version of safari-pinned-tab if needed
-    // Since Sharp doesn't directly support SVG output, we'll create a simple SVG file
+
+    // Create the SVG version of safari-pinned-tab
     try {
       const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
         <rect width="32" height="32" fill="#000000" />
       </svg>`;
       fs.writeFileSync(path.join(iconDestDir, 'safari-pinned-tab.svg'), svgContent);
-      console.log(`✅ Generated: safari-pinned-tab.svg (basic version)`);
+      console.log(`✅ Generated: safari-pinned-tab.svg`);
     } catch (svgError) {
       console.error(`⚠️ Error creating SVG: ${svgError.message}`);
-      console.log(`ℹ️ You may need to create safari-pinned-tab.svg manually.`);
     }
-    
-    // Clean up temp directory
-    for (const file of files) {
-      fs.unlinkSync(path.join(tempDir, file));
-    }
-    fs.rmdirSync(tempDir);
-    
+
     console.log('✅ All icons generated successfully!');
     console.log(`Icons saved to: ${iconDestDir}`);
-    
-    console.log('\n📝 Note: For best quality favicon.ico, consider using an online ICO generator');
-    console.log('with the generated favicon-16x16.png and favicon-32x32.png files.');
     
     // Clean up the temp source image if we created one
     if (sourceImage.includes('temp-source.png') && fs.existsSync(sourceImage)) {
