@@ -39,7 +39,8 @@
     "build": "vite build && node scripts/copy-favicon-to-root.js",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "favicons": "node scripts/copy-favicon-to-root.js"
+    "favicons": "node scripts/copy-favicon-to-root.js",
+    "generate-icons": "node scripts/generate-icons.js"
   },
   "browserslist": {
     "production": [

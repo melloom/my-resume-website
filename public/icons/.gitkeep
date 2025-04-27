@@ -1,2 +1,2 @@
-# This file ensures the icons directory exists in Git
-# It can be removed once actual icon files are added
+# This directory contains favicon and app icon files
+# Generated using the generate-icons.js script
