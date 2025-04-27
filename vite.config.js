@@ -65,6 +65,21 @@ export default defineConfig(({ mode }) => {
           drop_console: true,
           drop_debugger: true
         }
+      },
+      // Add rollup options to handle pure annotation warnings
+      rollupOptions: {
+        onwarn(warning, warn) {
+          // Skip pure annotation warnings from react-helmet-async
+          if (
+            warning.code === 'INVALID_ANNOTATION' && 
+            warning.message.includes('/*#__PURE__*/') && 
+            warning.message.includes('react-helmet-async')
+          ) {
+            return;
+          }
+          // Forward all other warnings to the default handler
+          warn(warning);
+        }
       }
     },
     resolve: {
