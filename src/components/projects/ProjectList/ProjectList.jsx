@@ -48,14 +48,23 @@ const ProjectList = () => {
 
     setProjects(initialProjects);
 
-    // Function to generate screenshot URL with improved parameters
+    // Function to generate screenshot URL
     const generateScreenshotUrl = (url) => {
-      return `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url&waitUntil=networkidle0&timeout=30000&viewport.width=1280&viewport.height=800&viewport.deviceScaleFactor=1&screenshot.type=jpeg&screenshot.quality=80`;
+      return `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url&waitUntil=networkidle0&timeout=30000&viewport.width=1280&viewport.height=800&viewport.deviceScaleFactor=1&screenshot.type=jpeg&screenshot.quality=80&apiKey=YOUR_MICROLINK_API_KEY`;
     };
 
     // Function to load screenshot with retry mechanism
     const loadScreenshot = async (project, retryCount = 0) => {
       try {
+        // First try to get from cache
+        const cachedImage = localStorage.getItem(`screenshot_${project.id}`);
+        if (cachedImage) {
+          return {
+            ...project,
+            image: cachedImage
+          };
+        }
+
         const screenshotUrl = generateScreenshotUrl(project.link);
         const response = await fetch(screenshotUrl);
         
@@ -64,10 +73,16 @@ const ProjectList = () => {
         }
         
         const data = await response.json();
-        return {
-          ...project,
-          image: data.status === 'success' ? data.data.screenshot.url : ''
-        };
+        if (data.status === 'success' && data.data.screenshot.url) {
+          // Cache the successful screenshot
+          localStorage.setItem(`screenshot_${project.id}`, data.data.screenshot.url);
+          return {
+            ...project,
+            image: data.data.screenshot.url
+          };
+        }
+        
+        throw new Error('Invalid response format');
       } catch (error) {
         console.error(`Error generating screenshot for ${project.title}:`, error);
         
@@ -78,7 +93,13 @@ const ProjectList = () => {
           return loadScreenshot(project, retryCount + 1);
         }
         
-        return project;
+        // If all retries fail, try to use a fallback image
+        const fallbackImage = `https://api.microlink.io/?url=${encodeURIComponent(project.link)}&screenshot=true&meta=false&embed=screenshot.url&waitUntil=load&timeout=10000&viewport.width=1280&viewport.height=800&viewport.deviceScaleFactor=1&screenshot.type=jpeg&screenshot.quality=80&apiKey=YOUR_MICROLINK_API_KEY`;
+        
+        return {
+          ...project,
+          image: fallbackImage
+        };
       }
     };
 
@@ -88,14 +109,6 @@ const ProjectList = () => {
         const updatedProjects = await Promise.all(
           initialProjects.map(project => loadScreenshot(project))
         );
-
-        // Cache successful screenshots in localStorage
-        updatedProjects.forEach(project => {
-          if (project.image) {
-            localStorage.setItem(`screenshot_${project.id}`, project.image);
-          }
-        });
-
         setProjects(updatedProjects);
       } catch (error) {
         console.error('Error updating projects with screenshots:', error);
