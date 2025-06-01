@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useTransition, lazy } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaSun, FaMoon, FaBars, FaTimes, FaHome, FaFileAlt, FaEnvelope, FaUser } from 'react-icons/fa';
+import { FaSun, FaMoon, FaBars, FaTimes, FaHome, FaFileAlt, FaEnvelope, FaUser, FaCode } from 'react-icons/fa';
 import { preloadRouteComponent } from '../../utils/routePreloader';
 import ShareButton from '../common/ShareButton';
 import styles from './Header.module.css';
@@ -130,6 +130,20 @@ const Header = ({ theme = 'dark', toggleTheme }) => {
               </li>
               <li className={styles.navItem}>
                 <Link 
+                  to="/projects" 
+                  className={`${styles.navLink} ${isActive('/projects') ? styles.active : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavigation('/projects');
+                  }}
+                  onMouseEnter={() => handleLinkHover('/projects')}
+                  onFocus={() => handleLinkHover('/projects')}
+                >
+                  <FaCode className={styles.navIcon} /> Projects
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link 
                   to="/resume" 
                   className={`${styles.navLink} ${isActive('/resume') ? styles.active : ''}`}
                   onClick={(e) => {
@@ -244,6 +258,18 @@ const Header = ({ theme = 'dark', toggleTheme }) => {
                   }}
                 >
                   <FaUser className={styles.sidebarIcon} /> About Me
+                </Link>
+              </li>
+              <li className={styles.sidebarItem}>
+                <Link 
+                  to="/projects" 
+                  className={`${styles.sidebarLink} ${isActive('/projects') ? styles.active : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavigation('/projects');
+                  }}
+                >
+                  <FaCode className={styles.sidebarIcon} /> Projects
                 </Link>
               </li>
               <li className={styles.sidebarItem}>

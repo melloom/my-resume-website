@@ -1,0 +1,43 @@
+.pageWrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.pageContent {
+  width: 100%;
+  min-height: 100vh;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.pageContent.transitioning {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Ensure smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Add a subtle fade effect to the background during transitions */
+.pageWrapper::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--background-color);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.pageContent.transitioning + .pageWrapper::before {
+  opacity: 1;
+} 

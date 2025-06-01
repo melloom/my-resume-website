@@ -160,10 +160,18 @@ const Footer = () => {
                   <a
                     href="/"
                     onClick={(e) => handleInternalNavigation(e, '/')}
-
                     className={location.pathname === '/' ? styles.active : ''}
                   >
                     Home
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/projects"
+                    onClick={(e) => handleInternalNavigation(e, '/projects')}
+                    className={location.pathname === '/projects' ? styles.active : ''}
+                  >
+                    Projects
                   </a>
                 </li>
                 <li>
