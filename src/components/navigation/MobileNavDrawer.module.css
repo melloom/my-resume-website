@@ -1,0 +1,168 @@
+.mobileNavDrawer {
+  display: none; /* Hidden by default, only shown on mobile */
+}
+
+.drawer {
+  position: fixed;
+  right: -250px; /* Hidden off-screen initially */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 230px;
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 16px 0 0 16px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: none;
+  transition: right 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 100;
+  padding: 20px 15px;
+}
+
+.drawer.open {
+  right: 0;
+}
+
+.drawerToggle {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: none;
+  border-radius: 16px 0 0 16px;
+  padding: 12px 8px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  z-index: 101;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.drawerToggle.drawerOpen {
+  right: 230px;
+}
+
+.toggleIcon {
+  color: var(--primary-color, #6366f1);
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.drawerOpen .toggleIcon {
+  transform: rotate(180deg);
+}
+
+.toggleLabel {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 8px;
+}
+
+.navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.navItem {
+  position: relative;
+}
+
+.navButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  gap: 12px;
+  text-align: left;
+}
+
+.navButton:hover {
+  color: var(--primary-color, #6366f1);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.navButton.active {
+  color: white;
+  background: var(--primary-color, #6366f1);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+.navIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+/* Light theme overrides */
+[data-theme="light"] .drawer,
+[data-theme="light"] .drawerToggle {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .drawer {
+  border-right: none;
+}
+
+[data-theme="light"] .navButton {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="light"] .navButton:hover {
+  background: rgba(79, 70, 229, 0.1);
+  color: #4f46e5;
+}
+
+[data-theme="light"] .navButton.active {
+  background: #4f46e5;
+  color: white;
+}
+
+[data-theme="light"] .toggleIcon {
+  color: #4f46e5;
+}
+
+[data-theme="light"] .toggleLabel {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Only show on small screens */
+@media (max-width: 768px) {
+  .mobileNavDrawer {
+    display: block;
+  }
+}
+
+/* Adjust for extra small screens */
+@media (max-width: 360px) {
+  .drawer {
+    width: 200px;
+  }
+  
+  .drawerToggle.drawerOpen {
+    right: 200px;
+  }
+}

@@ -1,0 +1,591 @@
+/* Header.module.css */
+
+/* Base Header Styles */
+.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: rgba(15, 23, 42, 0.9);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.headerScrolled {
+  background-color: rgba(15, 23, 42, 0.95);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  height: 65px;
+}
+
+.headerHidden {
+  transform: none;
+  opacity: 0.95;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  height: 100%;
+  padding: 0 2rem;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Logo Styles */
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 5;
+}
+
+.logoText {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--primary-color, #6366f1), var(--secondary-color, #a855f7));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: opacity 0.3s ease;
+}
+
+.logo:hover .logoText {
+  opacity: 0.8;
+}
+
+/* Desktop Navigation */
+.desktopNav {
+  display: flex;
+  height: 100%;
+}
+
+.navList {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.navItem {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin: 0 0.8rem;
+}
+
+.navLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  height: 100%;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navIcon {
+  margin-right: 0.5rem;
+  font-size: 0.9rem;
+  transition: transform 0.3s ease;
+}
+
+.navLink:hover {
+  color: var(--text-color, #ffffff);
+}
+
+.navLink:hover .navIcon {
+  transform: translateY(-2px);
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-color, #6366f1), var(--secondary-color, #a855f7));
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+  border-radius: 3px 3px 0 0;
+}
+
+.navLink:hover::after {
+  transform: scaleX(0.6);
+  transform-origin: center;
+}
+
+.navLink.active {
+  color: var(--text-color, #ffffff);
+}
+
+.navLink.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Controls Section */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  z-index: 5;
+}
+
+/* Theme Toggle - Improved Styling */
+.themeToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 52px;
+  height: 26px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+  margin-right: 5px;
+}
+
+.toggleTrack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(99, 102, 241, 0.2);
+  border-radius: 13px;
+  transition: background-color 0.3s ease;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toggleKnob {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.toggleLight {
+  background: #f97316;
+  right: 3px;
+  transform: translateX(0);
+}
+
+.toggleDark {
+  background: #6366f1;
+  left: 3px;
+  transform: translateX(0);
+}
+
+/* Light Theme Toggle Overrides */
+[data-theme="light"] .toggleTrack {
+  background-color: rgba(249, 115, 22, 0.2);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+[data-theme="light"] .toggleLight {
+  box-shadow: 0 0 8px rgba(249, 115, 22, 0.6);
+}
+
+[data-theme="light"] .toggleDark {
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+}
+
+/* Mobile Menu Button */
+.mobileMenuBtn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-color, #ffffff);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-left: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.mobileMenuBtn:hover {
+  transform: rotate(90deg);
+}
+
+/* NEW MOBILE SIDEBAR MENU STYLES */
+.mobileMenuWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.sidebarOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 9999;
+  pointer-events: none;
+  backdrop-filter: blur(3px);
+}
+
+.sidebarOverlay.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.sidebarMenu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 280px;
+  max-width: 80%;
+  height: 100%;
+  background-color: var(--bg-color, #0f172a);
+  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebarMenu.open {
+  right: 0;
+  pointer-events: auto;
+}
+
+.sidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebarTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color, #ffffff);
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin: -0.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  color: var(--text-color, #ffffff);
+  transform: rotate(90deg);
+}
+
+.sidebarNav {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+.sidebarList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebarItem {
+  margin-bottom: 0.8rem;
+}
+
+.sidebarLink {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 1.2rem;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  text-decoration: none; /* Add this to ensure links don't have underlines */
+}
+
+.sidebarIcon {
+  margin-right: 1rem;
+  font-size: 1.1rem;
+}
+
+.sidebarLink:hover {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--text-color, #ffffff);
+}
+
+.sidebarLink.active {
+  background-color: rgba(99, 102, 241, 0.15);
+  color: var(--primary-color, #6366f1);
+  font-weight: 600;
+}
+
+.sidebarFooter {
+  padding: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobileThemeToggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.themeLabel {
+  font-size: 0.9rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+.themeButton {
+  background: rgba(99, 102, 241, 0.1);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.themeButton.lightMode {
+  color: #f97316;
+}
+
+.themeButton.darkMode {
+  color: #6366f1;
+}
+
+.themeButton:hover {
+  transform: rotate(45deg);
+}
+
+/* Light Theme Styles */
+[data-theme="light"] .header {
+  background-color: rgba(248, 250, 252, 0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .headerScrolled {
+  background-color: rgba(248, 250, 252, 0.95);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .navLink {
+  color: rgba(51, 65, 85, 0.8);
+}
+
+[data-theme="light"] .navLink:hover,
+[data-theme="light"] .navLink.active {
+  color: #1e293b;
+}
+
+[data-theme="light"] .mobileMenuBtn {
+  color: #1e293b;
+}
+
+[data-theme="light"] .sidebarMenu {
+  background-color: #ffffff;
+  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .sidebarHeader {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .sidebarTitle {
+  color: #1e293b;
+}
+
+[data-theme="light"] .closeButton {
+  color: #64748b;
+}
+
+[data-theme="light"] .closeButton:hover {
+  color: #1e293b;
+}
+
+[data-theme="light"] .sidebarLink {
+  color: #64748b;
+}
+
+[data-theme="light"] .sidebarLink:hover {
+  background-color: rgba(99, 102, 241, 0.05);
+  color: #1e293b;
+}
+
+[data-theme="light"] .sidebarLink.active {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: #4f46e5;
+}
+
+[data-theme="light"] .sidebarFooter {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .themeLabel {
+  color: #64748b;
+}
+
+/* Add new loading indicator styles */
+.loadingIndicator {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  border-top: 2px solid var(--primary-color, #6366f1);
+  border-radius: 50%;
+  margin-right: 10px;
+  animation: spin 0.8s linear infinite;
+}
+
+.navigationOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 9000;
+  opacity: 0.7;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+
+  .navItem {
+    margin: 0 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktopNav {
+    display: none;
+  }
+
+  .mobileMenuBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logoText {
+    font-size: 1.3rem;
+  }
+
+  .header {
+    height: 65px;
+  }
+
+  .headerScrolled {
+    height: 60px;
+  }
+
+  /* Add responsive styles for loading indicator */
+  .loadingIndicator {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .logoText {
+    font-size: 1.2rem;
+  }
+
+  .sidebarMenu {
+    width: 260px;
+  }
+}
+
+/* Share button styles */
+.shareButtonContainer {
+  margin-right: 10px;
+}
+
+.mobileShareButton {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.shareLabel {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  font-size: 0.9rem;
+}
+
+.sidebarShareBtn {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Updated Mobile Actions */
+.mobileActions {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 15px;
+}
