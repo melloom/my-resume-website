@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useTransition, lazy } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaSun, FaMoon, FaBars, FaTimes, FaHome, FaFileAlt, FaEnvelope, FaUser, FaCode } from 'react-icons/fa';
+import { FaSun, FaMoon, FaBars, FaTimes, FaHome, FaFileAlt, FaEnvelope, FaUser, FaCode, FaShareAlt } from 'react-icons/fa';
 import { preloadRouteComponent } from '../../utils/routePreloader';
 import ShareButton from '../common/ShareButton';
 import styles from './Header.module.css';
@@ -11,7 +11,6 @@ const Header = ({ theme = 'dark', toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
-  const [isPending, startTransition] = useTransition();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -65,20 +64,30 @@ const Header = ({ theme = 'dark', toggleTheme }) => {
     preloadRouteComponent(path);
   };
 
-  // Handle navigation with transitions
+  // Handle navigation
   const handleNavigation = (path) => {
-    // Close menu first
     setIsMenuOpen(false);
-
-    // Use React's startTransition to mark navigation as non-blocking
-    startTransition(() => {
-      // Use navigate instead of window.location for client-side routing
-      navigate(path);
-    });
+    navigate(path);
   };
 
   const isActive = (path) => location.pathname === path;
   const headerClass = `${styles.header} ${isScrolled ? styles.headerScrolled : ''} ${!isHeaderVisible ? styles.headerHidden : ''}`;
+
+  // Add share function
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Melvin Peralta | Portfolio',
+        text: 'Check out Melvin Peralta\'s professional portfolio',
+        url: window.location.href,
+      })
+      .catch((error) => console.log('Error sharing', error));
+    } else {
+      // Fallback - copy URL to clipboard
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
+    }
+  };
 
   return (
     <>
@@ -173,45 +182,35 @@ const Header = ({ theme = 'dark', toggleTheme }) => {
             </ul>
           </nav>
 
-          {/* Controls Section with fixed toggle button */}
+          {/* Controls Section */}
           <div className={styles.controls}>
-            {/* Loading indicator */}
-            {isPending && <div className={styles.loadingIndicator}></div>}
-            
-            {/* Add Share Button - Use 'page' type to show arrow icon consistently */}
-            <div className={styles.shareButtonContainer}>
-              <ShareButton 
-                showLabel={false} 
-                size="small" 
-                type="page"
-                title={`Melvin Peralta | ${location.pathname === '/resume' ? 'Resume' : 'Portfolio'}`}
-              />
-            </div>
-            
             <button 
-              className={styles.themeToggle} 
-              onClick={toggleTheme}
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              onClick={handleShare}
+              className={styles.shareButton}
+              aria-label="Share this page"
             >
-              <div className={styles.toggleTrack}>
-                <div className={`${styles.toggleKnob} ${theme === 'dark' ? styles.toggleDark : styles.toggleLight}`}>
-                  {theme === 'dark' ? <FaMoon /> : <FaSun />}
-                </div>
-              </div>
+              <FaShareAlt />
+            </button>
+            <button 
+              onClick={toggleTheme}
+              className={`${styles.themeButton} ${theme === 'dark' ? styles.darkMode : styles.lightMode}`}
+              aria-label={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {theme === 'dark' ? <FaSun /> : <FaMoon />}
             </button>
 
             <button 
               className={styles.mobileMenuBtn}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Open menu"
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
-              <FaBars />
+              {isMenuOpen ? <FaTimes /> : <FaBars />}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Sidebar Menu - Rendered outside the header */}
+      {/* Mobile Menu */}
       <div className={styles.mobileMenuWrapper}>
         {/* Overlay */}
         <div 
@@ -233,7 +232,7 @@ const Header = ({ theme = 'dark', toggleTheme }) => {
             </button>
           </div>
           
-          {/* Mobile Menu Links - Using Link with proper React Router navigation */}
+          {/* Mobile Menu Links */}
           <nav className={styles.sidebarNav}>
             <ul className={styles.sidebarList}>
               <li className={styles.sidebarItem}>
@@ -309,6 +308,7 @@ const Header = ({ theme = 'dark', toggleTheme }) => {
                 <button 
                   onClick={toggleTheme}
                   className={`${styles.themeButton} ${theme === 'dark' ? styles.darkMode : styles.lightMode}`}
+                  aria-label={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                 >
                   {theme === 'dark' ? <FaSun /> : <FaMoon />}
                 </button>
@@ -316,19 +316,18 @@ const Header = ({ theme = 'dark', toggleTheme }) => {
               
               <div className={styles.mobileShareButton}>
                 <span className={styles.shareLabel}>Share this page</span>
-                <ShareButton 
-                  showLabel={false} 
-                  className={styles.sidebarShareBtn} 
-                  type={location.pathname === '/resume' ? 'resume' : 'page'}
-                />
+                <button 
+                  onClick={handleShare}
+                  className={styles.sidebarShareBtn}
+                  aria-label="Share this page"
+                >
+                  <FaShareAlt />
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Loading overlay for transitions */}
-      {isPending && <div className={styles.navigationOverlay}></div>}
     </>
   );
 };

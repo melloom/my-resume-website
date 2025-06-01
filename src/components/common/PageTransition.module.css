@@ -2,20 +2,11 @@
   position: relative;
   width: 100%;
   min-height: 100vh;
-  overflow: hidden;
-  will-change: transform, opacity;
 }
 
 .pageContent {
   width: 100%;
   min-height: 100vh;
-  position: relative;
-  z-index: 1;
-}
-
-.pageContent.transitioning {
-  opacity: 0;
-  transform: translateY(20px);
 }
 
 /* Ensure smooth scrolling for the entire page */
@@ -33,24 +24,11 @@ html {
   bottom: 0;
   background-color: var(--background-color);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
   z-index: -1;
-  will-change: opacity;
 }
 
 .pageContent.transitioning + .pageWrapper::before {
-  opacity: 1;
-}
-
-/* Optimize animation performance */
-@media (prefers-reduced-motion: reduce) {
-  .pageWrapper {
-    transition: none !important;
-    animation: none !important;
-  }
-  
-  html {
-    scroll-behavior: auto;
-  }
+  opacity: 0.8;
 } 
