@@ -1,49 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaGithub, FaExternalLinkAlt, FaCode } from 'react-icons/fa';
 import styles from './ProjectCard.module.css';
 
-const ProjectCard = ({ project, isLoading: parentLoading }) => {
+const ProjectCard = ({ project }) => {
   const { title, description, image, technologies, link, github } = project;
   const [imageError, setImageError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [retryCount, setRetryCount] = useState(0);
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  useEffect(() => {
-    if (image) {
-      setIsLoading(true);
-      setImageError(false);
-      setImageLoaded(false);
-    }
-  }, [image]);
-
-  const handleImageLoad = () => {
-    setIsLoading(false);
-    setImageLoaded(true);
-  };
 
   const handleImageError = () => {
-    if (retryCount < 2) {
-      // Retry loading the image after a delay
-      setTimeout(() => {
-        setRetryCount(prev => prev + 1);
-        setIsLoading(true);
-      }, 2000);
-    } else {
-      setImageError(true);
-      setIsLoading(false);
-    }
+    setImageError(true);
   };
 
   return (
     <div className={styles.card}>
       <div className={styles.imageContainer}>
-        {!imageLoaded && (isLoading || parentLoading) && (
-          <div className={styles.imageLoader}>
-            <div className={styles.spinner}></div>
-            <span className={styles.loadingText}>Loading screenshot...</span>
-          </div>
-        )}
         {imageError ? (
           <div className={styles.fallbackImage}>
             <FaCode size={48} />
@@ -53,10 +22,10 @@ const ProjectCard = ({ project, isLoading: parentLoading }) => {
           image && (
             <img 
               src={image} 
-              alt={title} 
-              className={styles.image} 
-              onLoad={handleImageLoad}
+              alt={`${title} screenshot`}
+              className={styles.image}
               onError={handleImageError}
+              loading="lazy"
             />
           )
         )}

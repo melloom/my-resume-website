@@ -3,14 +3,14 @@
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
+  will-change: transform, opacity;
 }
 
 .pageContent {
   width: 100%;
   min-height: 100vh;
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .pageContent.transitioning {
@@ -33,11 +33,24 @@ html {
   bottom: 0;
   background-color: var(--background-color);
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.3s ease;
   pointer-events: none;
   z-index: -1;
+  will-change: opacity;
 }
 
 .pageContent.transitioning + .pageWrapper::before {
   opacity: 1;
+}
+
+/* Optimize animation performance */
+@media (prefers-reduced-motion: reduce) {
+  .pageWrapper {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
 } 

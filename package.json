@@ -38,7 +38,8 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "favicons": "node scripts/copy-favicon-to-root.js",
-    "generate-icons": "node scripts/generate-icons.js"
+    "generate-icons": "node scripts/generate-icons.js",
+    "push": "git add . && git commit -m \"update\" && git push origin main && npm run build && netlify deploy --prod --dir=dist"
   },
   "browserslist": {
     "production": [

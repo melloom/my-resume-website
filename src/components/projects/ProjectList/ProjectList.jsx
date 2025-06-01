@@ -10,30 +10,30 @@ const ProjectList = () => {
     const initialProjects = [
       {
         id: 1,
-        title: 'Personal Portfolio',
-        description: 'My personal portfolio website built with React, showcasing my skills, experience, and projects. Features a modern, responsive design with dark/light mode and smooth animations.',
+        title: 'My Resume Website',
+        description: 'A modern, responsive personal website built with React and Vite. Features smooth animations, dark/light mode, and PWA support.',
         image: '',
-        technologies: ['React', 'Vite', 'CSS Modules', 'Netlify'],
-        link: 'https://melvinworks.bio',
+        technologies: ['React', 'Vite', 'CSS', 'Netlify'],
+        link: 'https://melvinperalta.netlify.app',
         github: 'https://github.com/melloom/my-resume-website'
       },
       {
         id: 2,
-        title: 'CloseLoop Training Platform',
-        description: 'A comprehensive training platform for on-call phone backend and frontend support. Features include user authentication, training modules, and progress tracking.',
+        title: 'Sales Dashboard',
+        description: 'A comprehensive sales analytics dashboard with real-time data visualization and performance metrics.',
         image: '',
-        technologies: ['React', 'Node.js', 'MongoDB', 'Express'],
-        link: 'https://closeloop.netlify.app',
-        github: 'https://github.com/melloom/closeloop'
+        technologies: ['React', 'Chart.js', 'Firebase', 'Material-UI'],
+        link: 'https://sales-dashboard-demo.netlify.app',
+        github: 'https://github.com/melloom/sales-dashboard'
       },
       {
         id: 3,
-        title: 'Lockora Password Generator',
-        description: 'A secure password generator and manager application. Features include password strength analysis, secure storage, and easy password generation.',
+        title: 'Task Manager',
+        description: 'A feature-rich task management application with drag-and-drop functionality and team collaboration features.',
         image: '',
-        technologies: ['React', 'JavaScript', 'CSS', 'LocalStorage'],
-        link: 'https://lockora.netlify.app',
-        github: 'https://github.com/melloom/lockora'
+        technologies: ['React', 'Redux', 'Node.js', 'MongoDB'],
+        link: 'https://task-manager-demo.netlify.app',
+        github: 'https://github.com/melloom/task-manager'
       },
       {
         id: 4,
@@ -48,30 +48,66 @@ const ProjectList = () => {
 
     setProjects(initialProjects);
 
-    // Function to generate screenshot URL with delay
+    // Function to generate screenshot URL with improved parameters
     const generateScreenshotUrl = (url) => {
-      return `https://api.microlink.io/?url=${url}&screenshot=true&meta=false&embed=screenshot.url&waitUntil=networkidle0&timeout=30000`;
+      return `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url&waitUntil=networkidle0&timeout=30000&viewport.width=1280&viewport.height=800&viewport.deviceScaleFactor=1&screenshot.type=jpeg&screenshot.quality=80`;
     };
 
-    // Update projects with screenshots after a delay
-    const updateProjectsWithScreenshots = async () => {
-      const updatedProjects = await Promise.all(
-        initialProjects.map(async (project) => {
-          try {
-            const screenshotUrl = generateScreenshotUrl(project.link);
-            return {
-              ...project,
-              image: screenshotUrl
-            };
-          } catch (error) {
-            console.error(`Error generating screenshot for ${project.title}:`, error);
-            return project;
-          }
-        })
-      );
+    // Function to load screenshot with retry mechanism
+    const loadScreenshot = async (project, retryCount = 0) => {
+      try {
+        const screenshotUrl = generateScreenshotUrl(project.link);
+        const response = await fetch(screenshotUrl);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return {
+          ...project,
+          image: data.status === 'success' ? data.data.screenshot.url : ''
+        };
+      } catch (error) {
+        console.error(`Error generating screenshot for ${project.title}:`, error);
+        
+        // Retry up to 2 times with exponential backoff
+        if (retryCount < 2) {
+          const delay = Math.pow(2, retryCount) * 2000; // 2s, 4s
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return loadScreenshot(project, retryCount + 1);
+        }
+        
+        return project;
+      }
+    };
 
-      setProjects(updatedProjects);
-      setIsLoading(false);
+    // Update projects with screenshots
+    const updateProjectsWithScreenshots = async () => {
+      try {
+        const updatedProjects = await Promise.all(
+          initialProjects.map(project => loadScreenshot(project))
+        );
+
+        // Cache successful screenshots in localStorage
+        updatedProjects.forEach(project => {
+          if (project.image) {
+            localStorage.setItem(`screenshot_${project.id}`, project.image);
+          }
+        });
+
+        setProjects(updatedProjects);
+      } catch (error) {
+        console.error('Error updating projects with screenshots:', error);
+        // Fallback to cached screenshots if available
+        const projectsWithCache = initialProjects.map(project => ({
+          ...project,
+          image: localStorage.getItem(`screenshot_${project.id}`) || ''
+        }));
+        setProjects(projectsWithCache);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     // Start the screenshot generation process
