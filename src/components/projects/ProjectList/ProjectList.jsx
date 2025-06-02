@@ -51,7 +51,7 @@ const ProjectList = () => {
         image: '/screenshots/numix.png',
         technologies: ['JavaScript', 'HTML5', 'CSS3', 'Netlify'],
         link: 'https://numixpro.netlify.app',
-        github: 'https://github.com/melloom/numixpro'
+        github: 'https://github.com/melloom/Numix'
       }
     ];
 
