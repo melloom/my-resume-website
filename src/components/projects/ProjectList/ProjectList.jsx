@@ -43,6 +43,15 @@ const ProjectList = () => {
         technologies: ['React', 'Vite', 'CSS', 'Netlify'],
         link: 'https://melhub.netlify.app',
         github: 'https://github.com/melloom/melhub'
+      },
+      {
+        id: 5,
+        title: 'NumixPro Calculator',
+        description: 'An advanced calculator application with comprehensive mathematical functions and operations. Features a modern interface, scientific calculations, memory functions, and history tracking for complex mathematical computations.',
+        image: '/screenshots/numix.png',
+        technologies: ['JavaScript', 'HTML5', 'CSS3', 'Netlify'],
+        link: 'https://numixpro.netlify.app',
+        github: 'https://github.com/melloom/numixpro'
       }
     ];
 
