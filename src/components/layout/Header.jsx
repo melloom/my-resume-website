@@ -66,7 +66,10 @@ const Header = ({ theme = 'dark', toggleTheme }) => {
 
   // Handle navigation
   const handleNavigation = (path) => {
-    setIsMenuOpen(false);
+    // Add a small delay before closing menu to show the selection feedback
+    setTimeout(() => {
+      setIsMenuOpen(false);
+    }, 200);
     navigate(path);
   };
 

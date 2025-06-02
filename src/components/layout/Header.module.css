@@ -170,14 +170,17 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 98;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .sidebarOverlay.visible {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 
@@ -187,10 +190,14 @@
   right: -300px;
   width: 300px;
   height: 100%;
-  background: var(--background-color);
+  background: rgba(15, 23, 42, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   z-index: 99;
   padding: 2rem;
-  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
+  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .sidebarMenu.open {
@@ -254,22 +261,43 @@
   cursor: pointer;
   text-align: left;
   text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
 }
 
 .sidebarIcon {
   margin-right: 1rem;
   font-size: 1.1rem;
+  transition: transform 0.3s ease;
 }
 
 .sidebarLink:hover {
-  background-color: rgba(99, 102, 241, 0.1);
+  background-color: rgba(99, 102, 241, 0.15);
   color: var(--text-color);
+  transform: translateX(5px);
+}
+
+.sidebarLink:hover .sidebarIcon {
+  transform: scale(1.1);
 }
 
 .sidebarLink.active {
-  background-color: rgba(99, 102, 241, 0.15);
+  background-color: rgba(99, 102, 241, 0.2);
   color: var(--primary-color);
   font-weight: 600;
+  border-left: 3px solid var(--primary-color);
+}
+
+.sidebarLink.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+  border-radius: 0 2px 2px 0;
 }
 
 .sidebarFooter {
@@ -363,9 +391,16 @@
   color: #1e293b;
 }
 
+[data-theme="light"] .sidebarOverlay {
+  background: rgba(0, 0, 0, 0.4);
+}
+
 [data-theme="light"] .sidebarMenu {
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 [data-theme="light"] .sidebarHeader {
@@ -389,13 +424,14 @@
 }
 
 [data-theme="light"] .sidebarLink:hover {
-  background-color: rgba(99, 102, 241, 0.05);
+  background-color: rgba(99, 102, 241, 0.1);
   color: #1e293b;
 }
 
 [data-theme="light"] .sidebarLink.active {
-  background-color: rgba(99, 102, 241, 0.1);
+  background-color: rgba(99, 102, 241, 0.15);
   color: #4f46e5;
+  border-left: 3px solid #4f46e5;
 }
 
 [data-theme="light"] .sidebarFooter {

@@ -105,8 +105,10 @@ const MobileNavDrawer = () => {
       // Set active section
       setActiveSection(id);
       
-      // Close drawer after navigation
-      setIsOpen(false);
+      // Close drawer after navigation with a slight delay for visual feedback
+      setTimeout(() => {
+        setIsOpen(false);
+      }, 300);
     }
   };
 
