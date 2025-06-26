@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Thumbnail Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 30px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #374151;
+            min-width: 120px;
+        }
+
+        .control-group input, .control-group select {
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .control-group input:focus, .control-group select:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .preview-section {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .thumbnail-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .thumbnail-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .thumbnail {
+            width: 400px;
+            height: 300px;
+            position: relative;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .thumbnail h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .thumbnail p {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.5;
+            max-width: 300px;
+        }
+
+        .thumbnail-footer {
+            padding: 20px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .thumbnail-footer h3 {
+            color: #374151;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tech-tag {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .download-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            background: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            color: #374151;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:hover {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        .preset-btn.active {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        @media (max-width: 768px) {
+            .preview-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .thumbnail {
+                width: 100%;
+                height: 250px;
+            }
+            
+            .control-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Project Thumbnail Generator</h1>
+            <p>Create professional thumbnails for your portfolio projects</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Project Name:</label>
+                <input type="text" id="projectName" placeholder="Enter project name">
+            </div>
+
+            <div class="control-group">
+                <label>Description:</label>
+                <input type="text" id="projectDescription" placeholder="Enter project description">
+            </div>
+
+            <div class="control-group">
+                <label>Background Style:</label>
+                <select id="backgroundStyle">
+                    <option value="gradient1">Purple Gradient</option>
+                    <option value="gradient2">Blue Gradient</option>
+                    <option value="gradient3">Green Gradient</option>
+                    <option value="gradient4">Orange Gradient</option>
+                    <option value="gradient5">Pink Gradient</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Quick Presets:</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="loadPreset('portfolio')">Personal Portfolio</button>
+                    <button class="preset-btn" onclick="loadPreset('closeloop')">CloseLoop</button>
+                    <button class="preset-btn" onclick="loadPreset('lockora')">Lockora</button>
+                    <button class="preset-btn" onclick="loadPreset('melhub')">MelHub</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <button class="btn" onclick="generateThumbnail()">Generate Thumbnail</button>
+                <button class="btn btn-secondary" onclick="downloadAll()">Download All</button>
+            </div>
+        </div>
+
+        <div class="preview-section" id="previewSection">
+            <!-- Thumbnails will be generated here -->
+        </div>
+    </div>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        const presets = {
+            portfolio: {
+                name: "Personal Portfolio",
+                description: "Modern React portfolio with responsive design and smooth animations",
+                tech: ["React", "Vite", "CSS Modules", "Netlify"],
+                style: "gradient1"
+            },
+            closeloop: {
+                name: "CloseLoop Training Platform",
+                description: "Comprehensive training platform for on-call support teams",
+                tech: ["React", "Node.js", "MongoDB", "Express"],
+                style: "gradient2"
+            },
+            lockora: {
+                name: "Lockora Password Generator",
+                description: "Secure password generator and manager application",
+                tech: ["React", "JavaScript", "CSS", "LocalStorage"],
+                style: "gradient3"
+            },
+            melhub: {
+                name: "MelHub Social Links",
+                description: "Centralized hub for social media and professional links",
+                tech: ["React", "Vite", "CSS", "Netlify"],
+                style: "gradient4"
+            }
+        };
+
+        const gradients = {
+            gradient1: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            gradient2: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+            gradient3: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+            gradient4: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+            gradient5: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+        };
+
+        function loadPreset(presetName) {
+            const preset = presets[presetName];
+            if (preset) {
+                document.getElementById('projectName').value = preset.name;
+                document.getElementById('projectDescription').value = preset.description;
+                document.getElementById('backgroundStyle').value = preset.style;
+                
+                // Update active button
+                document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+                
+                generateThumbnail();
+            }
+        }
+
+        function generateThumbnail() {
+            const name = document.getElementById('projectName').value || "Project Name";
+            const description = document.getElementById('projectDescription').value || "Project description";
+            const style = document.getElementById('backgroundStyle').value;
+            
+            const previewSection = document.getElementById('previewSection');
+            previewSection.innerHTML = '';
+
+            const thumbnailContainer = document.createElement('div');
+            thumbnailContainer.className = 'thumbnail-container';
+            thumbnailContainer.innerHTML = `
+                <div class="thumbnail" id="thumbnail" style="background: ${gradients[style]}">
+                    <h2>${name}</h2>
+                    <p>${description}</p>
+                </div>
+                <div class="thumbnail-footer">
+                    <h3>Technologies Used</h3>
+                    <div class="tech-stack">
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">CSS</span>
+                        <span class="tech-tag">Netlify</span>
+                    </div>
+                    <button class="download-btn" onclick="downloadThumbnail('${name}')">Download Thumbnail</button>
+                </div>
+            `;
+
+            previewSection.appendChild(thumbnailContainer);
+        }
+
+        async function downloadThumbnail(projectName) {
+            const thumbnail = document.getElementById('thumbnail');
+            if (!thumbnail) return;
+
+            try {
+                const canvas = await html2canvas(thumbnail, {
+                    backgroundColor: null,
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true
+                });
+
+                const link = document.createElement('a');
+                link.download = `${projectName.toLowerCase().replace(/\s+/g, '-')}-thumbnail.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            } catch (error) {
+                console.error('Error generating thumbnail:', error);
+                alert('Error generating thumbnail. Please try again.');
+            }
+        }
+
+        async function downloadAll() {
+            const projectNames = ['Personal Portfolio', 'CloseLoop Training Platform', 'Lockora Password Generator', 'MelHub Social Links'];
+            
+            for (let i = 0; i < projectNames.length; i++) {
+                const preset = Object.values(presets)[i];
+                document.getElementById('projectName').value = preset.name;
+                document.getElementById('projectDescription').value = preset.description;
+                document.getElementById('backgroundStyle').value = preset.style;
+                
+                generateThumbnail();
+                
+                // Wait a bit for the DOM to update
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Download the thumbnail
+                await downloadThumbnail(preset.name);
+                
+                // Wait before next download
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        }
+
+        // Generate initial thumbnail
+        generateThumbnail();
+    </script>
+</body>
+</html> 

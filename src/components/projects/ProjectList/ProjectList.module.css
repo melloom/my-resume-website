@@ -1,0 +1,53 @@
+.projectList {
+  padding: 4rem 0;
+  background: linear-gradient(
+    to bottom,
+    var(--background-color) 0%,
+    var(--background-color-secondary) 100%
+  );
+}
+
+/* Light theme styles */
+[data-theme="light"] .projectList {
+  background: linear-gradient(
+    to bottom,
+    #f8fafc 0%,
+    #f1f5f9 100%
+  );
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2.5rem;
+}
+
+/* 4K Display Support */
+@media (min-width: 2560px) {
+  .projectList {
+    padding: 6rem 0;
+  }
+
+  .container {
+    max-width: 2560px;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 3.5rem;
+    padding: 0 4rem;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .projectList {
+    padding: 2rem 0;
+  }
+
+  .container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 0 1.5rem;
+  }
+} 
